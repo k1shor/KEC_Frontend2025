@@ -1,0 +1,18 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+.myButton{
+    @apply bg-amber-300 px-4 py-2;
+}
+
+.LIGHT-btn{
+    @apply bg-blue-500 hover:bg-blue-300 active:bg-blue-600;
+    @apply px-4 py-2;
+}
+
+
+
+.DARK-btn{
+    @apply bg-blue-200 hover:bg-blue-300 active:bg-blue-400;
+    @apply px-4 py-2;
+}
