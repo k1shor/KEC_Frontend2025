@@ -1,9 +1,25 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { MyThemeContext } from '../App'
+import { login } from '../api/userAPI'
 
 const Login = () => {
-let theme = useContext(MyThemeContext)
+    let theme = useContext(MyThemeContext)
+    let [email, setEmail] = useState('')
+    let [password, setPassword] = useState('')
+
+    const handleLogin = e => {
+        e.preventDefault()
+        login(email, password)
+            .then((data) => { 
+                if(data.error){
+                    alert(data.error)
+                }
+                else{
+                    alert("LOGGED IN SUCCESSFULLY")
+                }
+            })
+    }
 
     return (
         <>
@@ -19,12 +35,21 @@ let theme = useContext(MyThemeContext)
                     <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl lg:order-1">
                         <div className="card-body">
                             <fieldset className="fieldset p-2">
+
                                 <label className="label text-xl">Email</label>
-                                <input type="email" className="input w-full text-lg!" placeholder="Email" />
+                                <input type="email" className="input w-full text-lg!" placeholder="Email"
+                                    onChange={e => setEmail(e.target.value)}
+                                />
+
                                 <label className="label text-xl">Password</label>
-                                <input type="password" className="input w-full text-lg!" placeholder="Password" />
+                                <input type="password" className="input w-full text-lg!" placeholder="Password"
+                                    onChange={e => setPassword(e.target.value)}
+                                />
+
                                 <div><a className="link link-hover text-lg">Forgot password?</a></div>
-                                <button className={`btn mt-4 ${theme}-btn`}>Login</button>
+                                <button className={`btn mt-4 ${theme}-btn`}
+                                    onClick={handleLogin}
+                                >Login</button>
                                 <span>Do not have an account? <Link to='/register'>Register</Link></span>
 
                             </fieldset>

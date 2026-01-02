@@ -17,6 +17,7 @@ import Display from './pages/Dispaly'
 import FetchData from './pages/FetchData'
 import PostDetails from './pages/PostDetails'
 import ReduxCounter from './pages/ReduxCounter'
+import EmailVerification from './pages/EmailVerification'
 
 const MyRoutes = () => {
     return (
@@ -36,6 +37,9 @@ const MyRoutes = () => {
                     <Route path='*' element={<NotFound />} />
                     <Route path='login' element={<Login />} />
                     <Route path='register' element={<Register />} />
+
+
+                    <Route path='/verify/:token' element ={<EmailVerification/>}/>
 
                     <Route path='services' element={<Services />} />
                     <Route path='contact' element={<Contact />} />

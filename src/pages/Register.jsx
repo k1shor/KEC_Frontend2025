@@ -1,7 +1,29 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { register } from '../api/userAPI'
 
 const Register = () => {
+    let [username, setUsername] = useState('')
+    let [email, setEmail] = useState('')
+    let [password, setPassword] = useState('')
+
+    const handleSubmit = e => {
+        e.preventDefault()
+        register(username, email, password)
+        .then(data=>{
+            if(data.error){
+                alert(data.error)
+            }
+            else{
+                // alert("User registered successfully.")
+                alert(data.message)
+                setUsername('')
+                setEmail('')
+                setPassword('')
+            }
+        })
+    }
+
     return (
         <>
             <div className="hero bg-base-200 min-h-[80vh]">
@@ -16,12 +38,12 @@ const Register = () => {
                     <div className="card bg-base-100 w-full max-w-md shrink-0 shadow-2xl md:w-1/2">
                         <div className="card-body">
                             <fieldset className="fieldset p-2">
-                                <label className="label text-xl" htmlFor='fname'>First Name</label>
+                                {/* <label className="label text-xl" htmlFor='fname'>First Name</label>
                                 <input type="text" className="input w-full text-lg!" placeholder="First Name" id='fname' />
                                 <label className="label text-xl" htmlFor='lname'>Last Name</label>
-                                <input type="text" className="input w-full text-lg!" placeholder="Last Name" id='lname' />
+                                <input type="text" className="input w-full text-lg!" placeholder="Last Name" id='lname' /> */}
 
-                                <label className="label text-xl" htmlFor='dob'>Date of Birth</label>
+                                {/* <label className="label text-xl" htmlFor='dob'>Date of Birth</label>
                                 <input type="date" className='input w-full text-lg!' id='dob' />
 
                                 <label className='label text-xl'>Gender</label>
@@ -49,22 +71,34 @@ const Register = () => {
 
 
                                 <label className='label text-xl' htmlFor='add'>Description</label>
-                                <textarea name="" id="" className='textarea w-full text-lg! resize-none!' rows={4}></textarea>
+                                <textarea name="" id="" className='textarea w-full text-lg! resize-none!' rows={4}></textarea> */}
 
-                                <label className="label text-xl">Photo</label>
-                                <input type="file" className="file-input w-full text-lg!" placeholder="Email" />
+                                {/* <label className="label text-xl">Photo</label>
+                                <input type="file" className="file-input w-full text-lg!" placeholder="Email" /> */}
 
 
+                                <label className="label text-xl" htmlFor='fname'>UserName</label>
+                                <input type="text" className="input w-full text-lg!" placeholder="UserName" id='username'
+                                    onChange={e => setUsername(e.target.value)}
+                                    value={username}
+                                />
 
                                 <label className="label text-xl">Email</label>
-                                <input type="email" className="input w-full text-lg!" placeholder="Email" />
+                                <input type="email" className="input w-full text-lg!" placeholder="Email"
+                                    onChange={e => setEmail(e.target.value)}
+                                     value={email} />
+
                                 <label className="label text-xl">Password</label>
-                                <input type="password" className="input w-full text-lg!" placeholder="Password" />
+                                <input type="password" className="input w-full text-lg!" placeholder="Password"
+                                    onChange={e => setPassword(e.target.value)} 
+                                    value={password}/>
+
                                 <div>
                                     <input type="checkbox" id='checkbox' className='me-1' />
                                     <span span='text-3xl!'>I accept the terms and conditions.</span>
                                 </div>
-                                <button className="btn btn-primary mt-4">Register</button>
+                                <button className="btn btn-primary mt-4"
+                                    onClick={handleSubmit}>Register</button>
                                 <span>Already have an account? <Link to='/login'>Login</Link></span>
                             </fieldset>
                         </div>
