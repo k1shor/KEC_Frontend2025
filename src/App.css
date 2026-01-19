@@ -16,3 +16,7 @@
     @apply bg-blue-200 hover:bg-blue-300 active:bg-blue-400;
     @apply px-4 py-2;
 }
+
+tr:hover {
+  transition: 0.2s ease;
+}

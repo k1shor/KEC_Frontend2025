@@ -31,3 +31,11 @@ export const login = (email, password) => {
         .then(response => { return response.json() })
         .catch(error => console.log(error))
 }
+
+export const keepLoggedIn = data => {
+    localStorage.setItem('auth', JSON.stringify(data))
+}
+
+export const isLoggedIn = () => {
+    return localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : false
+}

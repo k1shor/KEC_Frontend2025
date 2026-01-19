@@ -18,6 +18,19 @@ import FetchData from './pages/FetchData'
 import PostDetails from './pages/PostDetails'
 import ReduxCounter from './pages/ReduxCounter'
 import EmailVerification from './pages/EmailVerification'
+import LoggedIn from './components/LoggedIn'
+import AdminSidebar from './components/layout/admin/AdminSidebar'
+import AdminLayout from './components/layout/admin/AdminLayout'
+import Dashboard from './pages/Admin/Dashboard'
+import Categories from './pages/Admin/Categories'
+import AddCategory from './pages/Admin/AddCategory'
+import UpdateCategory from './pages/Admin/UpdateCategory'
+import Blogs from './pages/Blog'
+import AdminProducts from './pages/Admin/AdminProducts'
+import AddProduct from './pages/Admin/AddProduct'
+import UpdateProduct from './pages/Admin/UpdateProduct'
+import ProductDetails from './pages/ProductDetails'
+import Cart from './pages/Cart'
 
 const MyRoutes = () => {
     return (
@@ -35,23 +48,43 @@ const MyRoutes = () => {
 
                     {/* Page Not Found */}
                     <Route path='*' element={<NotFound />} />
-                    <Route path='login' element={<Login />} />
-                    <Route path='register' element={<Register />} />
+
+                    <Route path='/' element={<LoggedIn />}>
+                        <Route path='login' element={<Login />} />
+                        <Route path='register' element={<Register />} />
+                    </Route>
 
 
-                    <Route path='/verify/:token' element ={<EmailVerification/>}/>
+                    <Route path='/verify/:token' element={<EmailVerification />} />
 
                     <Route path='services' element={<Services />} />
                     <Route path='contact' element={<Contact />} />
                     <Route path='products' element={<Products />} />
+                    <Route path='blogs' element={<Blogs />} />
 
                     <Route path='display' element={<Display />} />
-                    <Route path='fetchdata' element={<FetchData/>}/>
-                    <Route path='post/:id' element = {<PostDetails/>}/>
-                    
-                    <Route path='counter' element = {<ReduxCounter/>}/>
-                </Route>
+                    <Route path='fetchdata' element={<FetchData />} />
+                    <Route path='post/:id' element={<PostDetails />} />
 
+                    <Route path='counter' element={<ReduxCounter />} />
+
+                    <Route path='/product/:id' element = {<ProductDetails/>}/>
+
+                    <Route path='cart' element = {<Cart/>}/>
+
+                </Route>
+                <Route path='/admin' element={<AdminLayout />}>
+                    <Route path='dashboard' element={<Dashboard />} />
+                    
+                    <Route path='category' element = {<Categories/>} />
+                    <Route path='category/new' element = {<AddCategory/>}/>
+                    <Route path='category/edit/:id' element = {<UpdateCategory/>}/>
+
+                    <Route path='products' element = {<AdminProducts/>}/>
+                    <Route path='product/new' element = {<AddProduct/>}/>
+                    <Route path='product/edit/:id' element = {<UpdateProduct/>}/>
+
+                </Route>
             </Routes>
         </BrowserRouter>
     )

@@ -1,60 +1,148 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { IoCart, IoPersonAdd } from 'react-icons/io5';
-import { IoIosLogIn } from 'react-icons/io';
-
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { IoCart, IoLogOut, IoPersonAdd, IoPersonCircle } from "react-icons/io5";
+import { IoIosLogIn } from "react-icons/io";
+import { MdDashboard } from "react-icons/md";
+import { isLoggedIn } from "../../api/userAPI";
+import { useSelector } from "react-redux";
 
 const Header = () => {
-    return (
-        <>
-            <div className="container-fluid">
-                <div className="row bg-dark text-white align-items-center py-1">
-                    <div className="col-md-3 fs-3 fw-bold text-center">
-                        <Link className="navbar-brand text-warning" to="/">Store</Link>
-                    </div>
-                    <div className="col-md-6 d-flex">
-                        <input type="search" class="form-control me-2" id="search" placeholder="Search" />
-                        <button type="submit" class="btn btn-warning">Search</button>
-                    </div>
-                    <div className="col-md-3 d-flex justify-content-evenly py-1">
-                        <Link to='/login' className='text-warning fs-3'><IoIosLogIn /></Link>
-                        <Link to={'/register'} className='text-warning fs-3'><IoPersonAdd /></Link>
-                        <Link to={'/cart'} className='text-warning fs-3'><IoCart /></Link>
-                    </div>
-                </div>
-            </div>
+  const auth = isLoggedIn();
+  const navigate = useNavigate();
 
+  const cart_items = useSelector(store => store.cart.cart_items)
+  const length = cart_items.length
 
-            <nav className="navbar navbar-expand-lg bg-body-tertiary">
-                <div className="container-fluid">
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
-                                <Link className="nav-link active" aria-current="page" to="/">Home</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/products">Products</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/services">Services</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/blogs">Blogs</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/contact">Contact</Link>
-                            </li>
+  const handleLogout = () => {
+    localStorage.removeItem("auth");
+    navigate("/login");
+  };
 
-                        </ul>
+  return (
+    <>
+      {/* TOP NAV */}
+      <div className="navbar bg-base-200 shadow-sm">
+        {/* Brand */}
+        <div className="navbar-start">
+          <Link to="/" className="btn btn-ghost normal-case text-2xl font-bold text-primary">
+            Store
+          </Link>
+        </div>
 
-                    </div>
-                </div>
-            </nav>
-        </>
-    )
-}
+        {/* Search Bar (hidden on small screens) */}
+        <div className="navbar-center hidden md:flex w-[45%]">
+          <div className="join w-full">
+            <input
+              type="search"
+              placeholder="Search products..."
+              className="input input-bordered join-item w-full"
+            />
+            <button className="btn btn-primary join-item">Search</button>
+          </div>
+        </div>
 
-export default Header
+        {/* Right Menu */}
+        <div className="navbar-end gap-3">
+
+          {/* Authenticated */}
+          {auth ? (
+            auth.role === 1 ? (
+              <>
+                <Link className="btn btn-ghost text-xl" to="/admin/dashboard">
+                  <MdDashboard />
+                </Link>
+
+                <button onClick={handleLogout} className="btn btn-error btn-square text-xl">
+                  <IoLogOut />
+                </button>
+              </>
+            ) : (
+              <>
+                <Link className="btn btn-ghost text-2xl" to="/profile">
+                  <IoPersonCircle />
+                </Link>
+
+                <Link className="btn btn-ghost btn-square relative text-2xl" to="/cart">
+                  <IoCart />
+                  {/* <sup className="text-sm">({length})</sup> */}
+                  {/* example count badge */}
+                  {
+                    length > 0 &&
+                    <span className="badge badge-sm badge-warning absolute -top-1 -right-3">{length}</span>
+                  }
+                </Link>
+
+                <button onClick={handleLogout} className="btn btn-error btn-square text-xl">
+                  <IoLogOut />
+                </button>
+              </>
+            )
+          ) : (
+            // Guest
+            <>
+              <Link className="btn btn-ghost text-xl" to="/login">
+                <IoIosLogIn />
+              </Link>
+
+              <Link className="btn btn-primary" to="/register">
+                <IoPersonAdd className="text-lg" />
+                Register
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* SECONDARY NAV */}
+      <div className="navbar bg-base-100 shadow-sm">
+        <div className="navbar-start">
+          {/* MOBILE DROPDOWN */}
+          <div className="dropdown">
+            <label tabIndex={0} className="btn btn-ghost lg:hidden">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h12M4 18h8" />
+              </svg>
+            </label>
+
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li><Link to="/">Home</Link></li>
+              <li><Link to="/products">Products</Link></li>
+              <li><Link to="/services">Services</Link></li>
+              <li><Link to="/blogs">Blogs</Link></li>
+              <li><Link to="/contact">Contact</Link></li>
+            </ul>
+          </div>
+
+          {/* Desktop Nav */}
+          <ul className="menu menu-horizontal px-1 hidden lg:flex">
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/products">Products</Link></li>
+            <li><Link to="/services">Services</Link></li>
+            <li><Link to="/blogs">Blogs</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
+          </ul>
+        </div>
+
+        {/* Mobile search bar */}
+        <div className="navbar-end w-full lg:hidden px-4 pb-2">
+          <input
+            type="search"
+            placeholder="Search..."
+            className="input input-bordered w-full"
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Header;

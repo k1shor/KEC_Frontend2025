@@ -1,133 +1,143 @@
-import { Button, Checkbox, FormControlLabel, FormGroup, Grid, Link, Radio, RadioGroup, Rating, Typography } from '@mui/material'
-import React from 'react'
-import { BsBookmarkFill } from 'react-icons/bs'
-import { IoBookmarkOutline } from 'react-icons/io5'
-import { TbCircleArrowRightFilled } from 'react-icons/tb'
-import { TiArrowRightOutline } from 'react-icons/ti'
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+import React, { useEffect, useState } from "react";
+
+import CategoryCheckbox from "../components/CategoryCheckbox";
+import PriceRadio from "../components/PriceRadio";
+import ProductCard from "../components/ProductCard";
+import { getAllProducts, getFilteredProducts } from "../api/productAPI";
 
 const Products = () => {
-    const departments = ["Mobiles", "Laptops", "Fitness", "Garden", "Gadgets"];
-    const priceRanges = [
-        "Upto Rs.1000",
-        "Rs.1000 - Rs.10000",
-        "Rs.10000 - Rs.50000",
-        "Rs.50000 - Rs.100000",
-        "Above Rs.100000"
-    ];
+    const [filters, setFilters] = useState({
+        category: [],
+        product_price: [],
+    });
+
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        getFilteredProducts(filters)
+            .then((data) => {
+                if (data.error) {
+                    console.log(data.error)
+                }
+                else {
+                    setProducts(data?.products)
+                }
+            }, [filters]);
+    })
+
+    const handleFilters = (filter, filterBy) => {
+        setFilters((prev) => ({ ...prev, [filterBy]: filter }));
+    };
 
     return (
-        <Grid 
-            container 
-            spacing={3} 
-            sx={{
-                p: 4,
-                bgcolor: '#f9f9f9',
-                minHeight: '100vh',
-            }}
-        >
-            {/* Sidebar Filters */}
-            <Grid 
-                item 
-                xs={12} sm={12} md={3} lg={2} 
-                sx={{ 
-                    bgcolor: '#ffffff', 
-                    p: 4, 
-                    borderRadius: 2,
-                    boxShadow: 3,
-                    
-                    alignSelf: 'flex-start'
-                }}
-            >
-                <Typography variant='h5' sx={{ textDecoration: 'underline' }} color='success' fontWeight='bold' mb={2}>
-                    Deals
-                </Typography>
-                <FormGroup>
-                    <Link href='#' fontSize='18px' color='warning' fontWeight='bold' underline='hover' mb={1}>Daily Deals</Link>
-                    <Link href='#' fontSize='18px' color='secondary' fontWeight='bold' underline='hover' mb={1}>TOP Deals</Link>
-                    <Link href='#' fontSize='18px' color='error' fontWeight='bold' underline='hover' mb={1}>Flash Sales</Link>
-                    <Link href='#' fontSize='18px' color='info' fontWeight='bold' underline='hover' mb={1}>Most Popular</Link>
-                </FormGroup>
+        <div className="min-h-screen bg-gray-50 px-4 py-4 md:px-6 md:py-6">
+            <div className="mx-auto max-w-7xl">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
+                    {/* Sidebar Filters */}
+                    <aside className="md:col-span-3 lg:col-span-2">
+                        <div className="rounded-lg bg-white p-6 shadow-md md:sticky md:top-4">
+                            {/* Deals */}
+                            <h2 className="mb-4 text-xl font-bold text-green-600 underline">
+                                Deals
+                            </h2>
 
-                <Typography variant='h5' sx={{ textDecoration: 'underline', mt: 3 }} color='success' fontWeight='bold'>
-                    Departments
-                </Typography>
-                <FormGroup>
-                    {departments.map((dept) => (
-                        <FormControlLabel
-                            key={dept}
-                            control={<Checkbox icon={<TiArrowRightOutline />} checkedIcon={<TbCircleArrowRightFilled />} />}
-                            label={dept}
-                        />
-                    ))}
-                </FormGroup>
+                            <div className="space-y-2">
+                                <a
+                                    href="#"
+                                    className="block text-[18px] font-bold text-amber-600 hover:underline"
+                                >
+                                    Daily Deals
+                                </a>
+                                <a
+                                    href="#"
+                                    className="block text-[18px] font-bold text-purple-600 hover:underline"
+                                >
+                                    TOP Deals
+                                </a>
+                                <a
+                                    href="#"
+                                    className="block text-[18px] font-bold text-red-600 hover:underline"
+                                >
+                                    Flash Sales
+                                </a>
+                                <a
+                                    href="#"
+                                    className="block text-[18px] font-bold text-sky-600 hover:underline"
+                                >
+                                    Most Popular
+                                </a>
+                            </div>
 
-                <Typography variant='h5' sx={{ textDecoration: 'underline', mt: 3 }} color='success' fontWeight='bold'>
-                    Prices
-                </Typography>
-                <RadioGroup defaultValue="0" name="radio-buttons-group">
-                    {priceRanges.map((price, idx) => (
-                        <FormControlLabel 
-                            key={idx} 
-                            value={`${idx}`} 
-                            control={<Radio icon={<IoBookmarkOutline />} checkedIcon={<BsBookmarkFill />} />} 
-                            label={price} 
-                        />
-                    ))}
-                </RadioGroup>
+                            {/* Departments */}
+                            <h2 className="mt-6 text-xl font-bold text-green-600 underline">
+                                Departments
+                            </h2>
 
-                <Typography variant='h5' sx={{ textDecoration: 'underline', mt: 3 }} color='success' fontWeight='bold'>
-                    Avg. Reviews
-                </Typography>
-                <FormGroup sx={{ mt: 1 }}>
-                    {[1,2,3,4,5].map((val) => (
-                        <Link href='#' key={val} sx={{ display: 'block', mb: 1 }}>
-                            <Rating value={val} readOnly max={5} />
-                        </Link>
-                    ))}
-                </FormGroup>
-            </Grid>
+                            <div className="mt-3">
+                                <CategoryCheckbox handleFilters={handleFilters} />
+                            </div>
 
-            {/* Product Cards */}
-            <Grid item xs={12} sm={12} md={8} lg={9} container >
-                {[...Array(8)].map((_, idx) => (
-                    <Grid item xs={12} sm={6} lg={4} key={idx}>
-                        <Card 
-                            sx={{ 
-                                maxWidth: 345, 
-                                width: '100%', 
-                                borderRadius: 3, 
-                                boxShadow: 4, 
-                                transition: 'transform 0.3s, box-shadow 0.3s',
-                                '&:hover': { transform: 'translateY(-5px)', boxShadow: 6 }
-                            }}
-                        >
-                            <CardMedia
-                                sx={{ height: 180 }}
-                                image="/static/images/cards/contemplative-reptile.jpg"
-                                title="green iguana"
-                            />
-                            <CardContent>
-                                <Typography gutterBottom variant="h6" component="div">
-                                    Lizard
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small" variant="contained" color="primary">Share</Button>
-                                <Button size="small" variant="outlined" color="primary">Learn More</Button>
-                            </CardActions>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
-        </Grid>
-    )
-}
+                            {/* Prices */}
+                            <h2 className="mt-6 text-xl font-bold text-green-600 underline">
+                                Prices
+                            </h2>
 
-export default Products
+                            <div className="mt-3">
+                                <PriceRadio handleFilters={handleFilters} />
+                            </div>
+
+                            {/* Avg Reviews */}
+                            <h2 className="mt-6 text-xl font-bold text-green-600 underline">
+                                Avg. Reviews
+                            </h2>
+
+                            <div className="mt-3 space-y-2">
+                                {[1, 2, 3, 4, 5].map((val) => (
+                                    <a
+                                        href="#"
+                                        key={val}
+                                        className="block hover:opacity-90"
+                                    // onClick={(e)=>{e.preventDefault(); handleFilters(val, 'rating')}}
+                                    >
+                                        {/* Pure HTML stars (no MUI) */}
+                                        <div className="flex items-center gap-1">
+                                            {Array.from({ length: 5 }).map((_, i) => (
+                                                <svg
+                                                    key={i}
+                                                    viewBox="0 0 20 20"
+                                                    className={`h-5 w-5 ${i < val ? "text-yellow-400" : "text-gray-300"
+                                                        }`}
+                                                    fill="currentColor"
+                                                    aria-hidden="true"
+                                                >
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.173c.969 0 1.371 1.24.588 1.81l-3.374 2.452a1 1 0 00-.364 1.118l1.286 3.966c.3.922-.755 1.688-1.538 1.118l-3.374-2.452a1 1 0 00-1.176 0l-3.374 2.452c-.783.57-1.838-.196-1.538-1.118l1.286-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.173a1 1 0 00.95-.69l1.286-3.967z" />
+                                                </svg>
+                                            ))}
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    </aside>
+
+                    {/* Product Cards */}
+                    <main className="md:col-span-9 lg:col-span-10">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                            {products.map((product) => (
+                                <ProductCard key={product?._id ?? product?.id} product={product} />
+                            ))}
+                        </div>
+
+                        {products.length === 0 && (
+                            <p className="mt-6 text-center text-gray-500">
+                                No products found.
+                            </p>
+                        )}
+                    </main>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Products;

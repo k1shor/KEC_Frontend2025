@@ -1,12 +1,14 @@
 import React, { useContext, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { MyThemeContext } from '../App'
-import { login } from '../api/userAPI'
+import { keepLoggedIn, login } from '../api/userAPI'
 
 const Login = () => {
     let theme = useContext(MyThemeContext)
     let [email, setEmail] = useState('')
     let [password, setPassword] = useState('')
+
+    const navigate = useNavigate()
 
     const handleLogin = e => {
         e.preventDefault()
@@ -16,7 +18,14 @@ const Login = () => {
                     alert(data.error)
                 }
                 else{
-                    alert("LOGGED IN SUCCESSFULLY")
+                    keepLoggedIn(data)
+                    // alert("LOGGED IN SUCCESSFULLY")
+                    if(data.role == 1){
+                        navigate('/admin/dashboard')
+                    }
+                    else{
+                        navigate('/')
+                    }
                 }
             })
     }
