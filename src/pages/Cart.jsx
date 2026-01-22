@@ -1,9 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { API } from "../constants";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { updateCart } from "../components/Reducer/cartActions";
+import { clearCart, removeFromCart, updateCart } from "../components/Reducer/cartActions";
 
 const Cart = () => {
     const cart_items = useSelector((store) => store.cart.cart_items);
@@ -14,28 +14,45 @@ const Cart = () => {
     );
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const proceedToCheckout = e => {
+        e.preventDefault()
+        sessionStorage.setItem('amount', subtotal)
+        navigate('/checkout')
+    }
 
     const update_cart = (cart_item, choice) => e => {
         e.preventDefault()
-        if(choice === '-'){
+        if (choice === '-') {
             let newQty = Number(cart_item.quantity) - 1
-            if(newQty<= 0){
+            if (newQty <= 0) {
                 Swal.fire('Attention!', 'Cannot decrease quantity. Try removing instead.', 'warning')
             }
-            else{
-                dispatch(updateCart({...cart_item, quantity: newQty}))
+            else {
+                dispatch(updateCart({ ...cart_item, quantity: newQty }))
             }
         }
-        else{
+        else {
             let newQty = Number(cart_item.quantity) + 1
             console.log(cart_item, newQty)
-            if(newQty> cart_item.stock){
+            if (newQty > cart_item.stock) {
                 Swal.fire('Attention!', 'Cannot increase quantity. Quantity exceeds stock.', 'warning')
             }
-            else{
-                dispatch(updateCart({...cart_item, quantity: newQty}))
+            else {
+                dispatch(updateCart({ ...cart_item, quantity: newQty }))
             }
         }
+    }
+
+    const remove_from_cart = (id) => e => {
+        e.preventDefault()
+        dispatch(removeFromCart(id))
+    }
+
+    const clear_cart = e => {
+        e.preventDefault()
+        dispatch(clearCart())
     }
 
     return (
@@ -167,15 +184,15 @@ const Cart = () => {
                                                             {/* Desktop quantity */}
                                                             <td className="text-center hidden lg:table-cell">
                                                                 <div className="inline-flex items-center gap-2 justify-center">
-                                                                    <button className="btn btn-sm btn-outline btn-error px-3 transition-all">
+                                                                    <button className="btn btn-xs btn-outline btn-error px-2 transition-all" onClick={update_cart(item, '-')}>
                                                                         −
                                                                     </button>
 
-                                                                    <span className="badge badge-neutral min-w-[3rem] justify-center">
+                                                                    <span className="font-semibold">
                                                                         {item.quantity}
                                                                     </span>
 
-                                                                    <button className="btn btn-sm btn-outline btn-success px-3 transition-all">
+                                                                    <button className="btn btn-xs btn-outline btn-success px-2 transition-all" onClick={update_cart(item, '+')}>
                                                                         +
                                                                     </button>
                                                                 </div>
@@ -189,6 +206,7 @@ const Cart = () => {
                                                                 <button
                                                                     className="btn btn-error btn-sm btn-outline"
                                                                     title="Remove item"
+                                                                    onClick={remove_from_cart(item.product)}
                                                                 >
                                                                     ✕
                                                                 </button>
@@ -200,7 +218,13 @@ const Cart = () => {
 
                                             <tfoot>
                                                 <tr>
-                                                    <td colSpan={6}>
+                                                    <td colSpan={3}>
+                                                        <button className="btn btn-error" onClick={clear_cart}>
+                                                            Clear Cart
+                                                        </button>
+                                                    </td>
+
+                                                    <td colSpan={3}>
                                                         <div className="flex items-center justify-between px-4 py-3">
                                                             <span className="font-semibold">
                                                                 Subtotal
@@ -248,11 +272,11 @@ const Cart = () => {
                                     </div>
 
                                     <div className="card-actions mt-4">
-                                        <Link to="/checkout" className="w-full">
-                                            <button className="btn btn-primary btn-block">
-                                                Proceed to Checkout
-                                            </button>
-                                        </Link>
+                                        {/* <Link to="/checkout" className="w-full"> */}
+                                        <button className="btn btn-primary btn-block" onClick={proceedToCheckout}>
+                                            Proceed to Checkout
+                                        </button>
+                                        {/* </Link> */}
                                         <Link to="/products" className="w-full">
                                             <button className="btn btn-ghost btn-block">
                                                 Continue Shopping
@@ -273,7 +297,7 @@ const Cart = () => {
                 {/* Mobile bottom bar */}
                 {cart_items.length > 0 && (
                     <div className="btm-nav lg:hidden">
-                        <button className="active">
+                        <button className="active" onClick={proceedToCheckout}>
                             <span className="btm-nav-label font-semibold">
                                 Total: Rs. {subtotal}
                             </span>

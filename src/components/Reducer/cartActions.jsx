@@ -67,3 +67,24 @@ export const updateCart = (cart_item) => (dispatch, getState) => {
 
     Swal.fire('Congrats!', 'Item updated in cart.', 'success')
 }
+
+export const removeFromCart = (id) => (dispatch, getState) => {
+    dispatch({type: "REMOVE_FROM_CART", payload: id})
+    localStorage.setItem('cart_items', JSON.stringify(getState().cart.cart_items))
+    Swal.fire('Attention!', 'Item removed from cart.', 'warning')
+
+}
+export const clearCart = () => (dispatch, getState) => {
+    dispatch({type: "CLEAR_CART"})
+    localStorage.setItem('cart_items', JSON.stringify(getState().cart.cart_items))
+    Swal.fire('Attention!', 'Cart has been cleared.', 'warning')
+
+}
+
+export const saveShippingInfo = (shipping_info) => (dispatch, getState) => {
+    dispatch({type: "SAVE_SHIPPING_INFO", payload: shipping_info})
+    localStorage.setItem('shipping_info', JSON.stringify(getState().cart.shipping_info))
+    Swal.fire('Congrats!', 'Shipping Information Updated.', 'success')
+
+}
+

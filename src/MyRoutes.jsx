@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, HashRouter, Route, Routes } from 'react-router-dom'
 import First from './First'
 import Second from './Second'
 import Third from './Third'
@@ -31,10 +31,15 @@ import AddProduct from './pages/Admin/AddProduct'
 import UpdateProduct from './pages/Admin/UpdateProduct'
 import ProductDetails from './pages/ProductDetails'
 import Cart from './pages/Cart'
+import Checkout from './pages/Checkout'
+import Payment from './pages/Payment'
+import PaymentForm from './pages/PaymentForm'
+import PaymentComplete from './pages/PaymentComplete'
+import Orders from './pages/Admin/Orders'
 
 const MyRoutes = () => {
     return (
-        <BrowserRouter>
+        <HashRouter>
             {/* <Header/> */}
 
             <Routes>
@@ -68,25 +73,32 @@ const MyRoutes = () => {
 
                     <Route path='counter' element={<ReduxCounter />} />
 
-                    <Route path='/product/:id' element = {<ProductDetails/>}/>
+                    <Route path='/product/:id' element={<ProductDetails />} />
 
-                    <Route path='cart' element = {<Cart/>}/>
+                    <Route path='cart' element={<Cart />} />
+                    <Route path='checkout' element={<Checkout />} />
+
+                    <Route path='/' element={<Payment />}>
+                        <Route path='payment' element={<PaymentForm />} />
+                        <Route path='order/complete' element={<PaymentComplete />} />
+                    </Route>
 
                 </Route>
                 <Route path='/admin' element={<AdminLayout />}>
                     <Route path='dashboard' element={<Dashboard />} />
-                    
-                    <Route path='category' element = {<Categories/>} />
-                    <Route path='category/new' element = {<AddCategory/>}/>
-                    <Route path='category/edit/:id' element = {<UpdateCategory/>}/>
 
-                    <Route path='products' element = {<AdminProducts/>}/>
-                    <Route path='product/new' element = {<AddProduct/>}/>
-                    <Route path='product/edit/:id' element = {<UpdateProduct/>}/>
+                    <Route path='category' element={<Categories />} />
+                    <Route path='category/new' element={<AddCategory />} />
+                    <Route path='category/edit/:id' element={<UpdateCategory />} />
 
+                    <Route path='products' element={<AdminProducts />} />
+                    <Route path='product/new' element={<AddProduct />} />
+                    <Route path='product/edit/:id' element={<UpdateProduct />} />
+
+                    <Route path='orders' element={<Orders />} />
                 </Route>
             </Routes>
-        </BrowserRouter>
+        </HashRouter>
     )
 }
 
