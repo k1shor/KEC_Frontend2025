@@ -1,8 +1,9 @@
-const API = `http://localhost:5000/api/user`
+// const API = `http://localhost:5000/api/user`
+import { API } from "../constants"
 
 export const register = (username, email, password) => {
     let user = { username, email, password }
-    return fetch(`${API}/register`, {
+    return fetch(`${API}/user/register`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -14,14 +15,14 @@ export const register = (username, email, password) => {
 }
 
 export const verifyEmail = (token) => {
-    return fetch(`${API}/verify/${token}`)
+    return fetch(`${API}/user/verify/${token}`)
         .then(res => res.json())
         .catch(error => console.log(error))
 }
 
 export const login = (email, password) => {
     let user = { email, password }
-    return fetch(`${API}/login`, {
+    return fetch(`${API}/user/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

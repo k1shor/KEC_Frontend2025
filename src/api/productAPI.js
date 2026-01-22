@@ -1,14 +1,15 @@
-const API = `http://localhost:5000/api/product`
+// const API = `http://localhost:5000/api/product`
+import { API } from "../constants"
 
 
 export const getAllProducts = () => {
-    return fetch(`${API}/getallproducts`)
+    return fetch(`${API}/product/getallproducts`)
         .then(res => res.json())
         .catch(error => console.log(error))
 }
 
 export const addProduct = (token, product) => {
-    return fetch(`${API}/addproduct`, {
+    return fetch(`${API}/product/addproduct`, {
         method: "POST",
         headers: {
             authorization: `Bearer ${token}`
@@ -20,7 +21,7 @@ export const addProduct = (token, product) => {
 }
 
 export const updateProduct = (token, id, product) => {
-    return fetch(`${API}/updateproduct/${id}`, {
+    return fetch(`${API}/product/updateproduct/${id}`, {
         method: "PUT",
         headers: {
             authorization: `Bearer ${token}`
@@ -32,13 +33,13 @@ export const updateProduct = (token, id, product) => {
 }
 
 export const getProductDetails = (id) => {
-    return fetch(`${API}/getproductdetails/${id}`)
+    return fetch(`${API}/product/getproductdetails/${id}`)
         .then(res => res.json())
         .catch(error => console.log(error))
 }
 
 export const deleteProduct = (id, token) => {
-    return fetch(`${API}/deleteproduct/${id}`, {
+    return fetch(`${API}/product/deleteproduct/${id}`, {
         method: "DELETE",
         headers: {
             authorization: `Bearer ${token}`
@@ -50,7 +51,7 @@ export const deleteProduct = (id, token) => {
 
 
 export const getFilteredProducts = (filter) => {
-    return fetch(`${API}/getfilteredproducts`, {
+    return fetch(`${API}/product/getfilteredproducts`, {
         method: "POST",
         headers: {
             "Content-Type":"application/json"
@@ -62,7 +63,7 @@ export const getFilteredProducts = (filter) => {
 }
 
 export const getRelatedProducts = (id) => {
-    return fetch(`${API}/getrelatedproducts/${id}`)
+    return fetch(`${API}/product/getrelatedproducts/${id}`)
         .then(res => res.json())
         .catch(error => console.log(error))
 }
